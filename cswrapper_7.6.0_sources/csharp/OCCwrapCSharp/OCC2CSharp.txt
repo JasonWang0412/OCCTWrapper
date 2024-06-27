@@ -1,0 +1,243 @@
+// Created: 2007-06-29
+//
+// Copyright (c) 2007-2021 OPEN CASCADE SAS
+//
+// This file is part of commercial software by OPEN CASCADE SAS.
+//
+// This software is furnished in accordance with the terms and conditions
+// of the contract and with the inclusion of this copyright notice.
+// This software or any other copy thereof may not be provided or otherwise
+// be made available to any third party.
+//
+// No ownership title to the software is transferred hereby.
+//
+// OPEN CASCADE SAS makes no representation or warranties with respect to the
+// performance of this software, and specifically disclaims any responsibility
+// for any damages, special or consequential, connected with its use.
+
+Wrapping Open CASCADE classes to C#
+-----------------------------------
+
+This document describes a methodology to make Open CASCADE classes usable from
+C# ("c-sharp") language (as well as from other .NET languages).
+
+General approach
+----------------
+
+The wrapping is made using SWIG tool (www.swig.org). The SWIG interface file
+occtypes.i contains definitions of basic OCC types (such as Standard_Integer)
+for SWIG and defines SWIG macros facilitating wrapping of other OCC types:
+
+- WRAP_INCLUDE(name): used for wrapping simple typedefs;
+  just includes corresponding header file. 
+
+- WRAP_AS_ENUM_INCLUDE(name): used to wrap an enumeration. Besides 
+  including header file, defines typemaps to make it possible passing enumerations
+  by reference in calls to functions.
+
+- WRAP_AS_ENUM_INCLUDE_EXT(name,include): same as WRAP_AS_ENUM_INCLUDE() but for
+  wrapping application enums with explicitly specified header name to include.
+
+- WRAP_AS_STRUCT_INCLUDE(name): used to wrap a class copyable by value. Besides 
+  including header file, defines typemaps to make it possible passing objects of 
+  this type by reference in calls to functions and returning references to
+  such objects from functions.
+
+- WRAP_AS_STRUCT_INCLUDE_EXT(name,include): same as WRAP_AS_STRUCT_INCLUDE() but for
+  wrapping application structs with explicitly specified header name to include.
+
+- WRAP_AS_CLASS_INCLUDE(name): used to wrap a class passed by reference. Besides 
+  including header file, defines typemaps to make it possible passing objects of 
+  this type by reference in calls to functions and safe handling of returned
+  references to such objects from functions.
+
+- WRAP_AS_CLASS_INCLUDE_EXT(name,include): same as WRAP_AS_CLASS_INCLUDE() but for
+  wrapping application classes with explicitly specified header name to include.
+
+- WRAP_AS_HANDLE_INCLUDE(class): used to wrap a class inheriting Transient. 
+  Defines typemaps for appropriate handling of the class objects by Handle.
+
+- WRAP_AS_HANDLE_INCLUDE_EXT(name,include): same as WRAP_AS_HANDLE_INCLUDE() but for
+  wrapping application classes with explicitly specified header name to include.
+
+- WRAP_AS_PACKAGE(package): used to wrap package methods.
+  Make sure to include this after wrapping of all package types.
+
+- WRAP_AS_TEMPLATE_INCLUDE(class,definition): used to wrap instantiations of
+  simple templates (without nested classes). Here *class* is name of the 
+  wrapper class in C#, should correspond to typedef in C++ defined in the file 
+  class.hxx; *definition* is C++ specification of template instantiation.
+
+- WRAP_AS_NCOLLECTION_INCLUDE(class,collection,type): used to wrap 
+  instantiation of simple NCollection classes having nested Iterator class
+  (list, sequence, array), under name *class*.
+
+- WRAP_AS_MAP_INCLUDE(class,collection,type,hasher): used to wrap 
+  instantiation of NCollection_Map or IndexedMap classes.
+
+- WRAP_AS_DATAMAP_INCLUDE(class,collection,typekey,typevalue,hasher): 
+  used to wrap instantiation of NCollection_DataMap class.
+
+  The last three macros also create wrapper for nested Iterator class of the 
+  collection, under name *class*_Iterator.
+
+  When using these macros, make sure to use actual type for the last argument, 
+  e.g. "int" instead of "Standard_Integer" -- this is necessary for correct
+  mapping of references to Iterator class.
+
+  These macros assume that *class* is defined in corresponding header file as 
+  typedef to that collection. If this is not the case, use corresponding macro 
+  without suffix _INCLUDE.
+
+Using these macros allows more-or-less 'blind' yet customizable approach to 
+wrapping, facilitating controllable but easy wrapping of everything what is 
+needed: when you need some class to be wrapped, you just add an appropriate 
+macro to wrap this class in the .i file and rebuild. 
+
+Differences
+-----------
+
+This section describes differences in names of OCC types, interfaces,
+and usage of OCC classes between C++ and C# variants:
+
+- Standard_Boolean is wrapped as bool. Therefore, "true" shall be used instead 
+  of "Standard_True", and "false" - instead of "Standard_False"
+
+- Standard_Address is wrapped as System.IntPtr.
+
+- Enumerations are mapped to true C# enums. Therefore the enum values, when 
+  used, must be prefixed by enum type name, for instance, 
+  TopAbs_ShapeEnum.TopAbs_FACE  
+
+- Functions that accept non-const references to elementary types, enums, or 
+  classes in C++ also work with C#; just in C# they accept arguments by 
+  reference. 
+  Such arguments shall be passed in C# with 'ref' keyword; corresponding 
+  variables must be initialized explicitly before the call.
+
+- Functions that return non-const references to objects are wrapped correctly, in 
+  the sense that resulting C# object contains reference to the relevant C++ object. 
+  So the methods called for this object will behave as expected. 
+
+  For non-copyable classes the wrapper object created in this case stores 
+  internally the reference to the parent object; this is made in order to 
+  protect against premature destruction of parent object by C# garbage collector
+  while reference to its field (or otherwise its sub-object) is still in use.
+
+  For copyable classes returned by const reference the copy is created; 
+  in case of non-const reference special wrapper class is returned which 
+  requires explicit cast to either reference (to the same object as returned
+  by C++ layer) or copy of this object.
+
+  For functions returning references to OCCT handles and simple types (int, 
+  double, enums etc.) in C++ only the value is returned in C#. 
+  
+  In all cases the difference with C++ is that result of method call returning 
+  reference cannot be used as l-value for assignment. This is correct, taken 
+  that C# variables are actually pointers.
+  Note also that assignment of the C# variable to other value has different 
+  meaning than in C++: it does not change referred C++ object!
+
+- For types operated by handles in C++, both handle and type itself are mapped
+  into single type in C#. Operator DownCast is defined as method of that type.
+
+- Instead of macro STANDARD_TYPE(Class), use method Class.TypeOf() in C#
+  Note that operator == is not yet provided for Standard_Type class,
+  so the type can be checked only by IsKind() method.
+
+- Method IsNull is provided to check whether OCC handle contained in C# wrapper
+  object is null. Do not confuse that with C# variable being null; in general
+  case both checks might be necessary in C# (see also limitation below).
+  
+- OCC version numbers defined by macros in C++ (in Standard_Version.hxx) are 
+  wrapped as methods of class Standard_Version in C#
+
+- Package methods coinciding by name with classes of the same package (e.g. 
+  TopoDS::Face) or with reserved words of C# (or, equally, standard methods 
+  of C# objects, e.g. GetType()) are renamed on wrapping.
+
+Limitations
+-----------
+
+The following features typical to C# will not always work with wrapped 
+classes:
+
+- Operators 'is', 'as', and explicit C# type cast (type) may work or not work,
+  depending on how C# wrapper object has been created for the C++ object.
+  If the object was created with complete type in C# (e.g. constructed in C# or
+  obtained from call to C++ function returning that type), it works.
+  If the object was created in C# by call to C++ function returning base type
+  (e.g. Transient), it will have that type in C#, and operators 'is' et al. will
+  not work. 
+  In general case use OCC methods IsKind() and DownCast() instead.
+
+- The wrapper object returned by some call may contain Null C++ object, but
+  be not null itself. For classes inheriting Transient, use method IsNull()
+  to check whether contained handle is null. 
+  No such method is provided by the moment for classes manipulated by value,
+  since null pointers or references to such classes should never be returned
+  in OCC code (?).
+
+  It is possible to provide appropriate typemaps (csout and out) to ensure that
+  null C++ object will be returned as null C# objects, however this would not
+  guarantee that C# object will never contain null OCC handle (since the handle 
+  may be obtained as reference, and then nullified via another object).
+  Also, the current behaviour may be more correct for functions returning
+  reference to handle: even if this handle is null, it can be changed.
+
+The following features provided by OCC classes in C++ will not work in C#:
+
+- C++ operators are not mapped to C# by default (though they can be mapped
+  manually for some particular types -- see example for gp classes).
+
+ToDo
+----
+
+To be investigated:
+
+- It is not clear how to treat Null OCC handles in most appropriate way.
+  Though it is likely that current approach is OK.
+
+- Operations like assignment of objects in C# behave differently
+  than in C++. 
+
+- Handling possible C++/OCC exceptions and converting them to appropriate C#
+  exceptions 
+
+Packaging:
+
+- Learn how to distribute classes into namespaces in C#. The right approach seems 
+  to wrap OCC package to C# namespace, and OCC Toolkit - to C# assembly (i.e. dll). 
+
+  Note that current version of SWIG (3.0.12) does not allow to implement this 
+  easily. It is possible to specify namespace is by command line, i.e. for
+  all classes in the module. To use that possibility we would have to create 
+  one module per package. It can also be possible to use %nspace feature of 
+  SWIG to put each class in its own namespace; however, this is not 
+  straightforward and requires investigation.
+  In either case it will be necessary to add 'using' statements for that 
+  package at all classes using it in its interface.
+
+  On SWIG web site one can find a patch allowing distribution of generated C# 
+  classes by namespaces; however this patch has not been integrated (yet?)...
+  
+  By the moment C# wrapper classes are distributed into namespaces (corresponding
+  to OCCT packages) by Tcl script.
+
+- In principle, it is possible also to separate package prefix from the names of 
+  the classes, but the benefit is doubtful. 
+
+- Define appropriate naming for wrapper dlls and .NET dlls. The possible approach 
+  can be to postfix name of the relevant OCC toolkit by "CSharp" and ".NET",
+  respectively. Alternatively, we can prefix toolkit name by some letter(s),
+  like it is adopted in OCC wrappers to Java (I.. for interface, C.. for client).
+
+Possible improvements of wrapping of some specific types:
+
+- Provide more operators for simple classes (like arithmetics for gp_XYZ) if needed
+
+- Map OStream and IStream to C# equivalents (System.IO.TextWriter and 
+  System.IO.TextReader). That should be possible by creating a specific class
+  in C++ inheriting stream_buffer and providing appropriate callbacks to C#.
+  Or, probably, C# already has some marchaling tools for that?
+  

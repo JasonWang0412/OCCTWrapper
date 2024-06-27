@@ -1,0 +1,110 @@
+﻿<Window x:Class="ImportExportWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"        
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        
+        xmlns:o="clr-namespace:OCCWpf;assembly=OCCWpf"
+        xmlns:movc="clr-namespace:OCCWpf;assembly=OCCWpf"
+        xmlns:utils="clr-namespace:ImportExportWPF.Utils"
+        
+        xmlns:dt="clr-namespace:ImportExportWPF.designtime"
+        
+        Title="C# OCCT WPF Viewer" Height="512" Width="768" Closed="Window_Closed">
+    
+    <Window.Resources>
+    <utils:ObjToVisibilityConverter x:Key="ObjToVisibilityConverter"/>
+    <dt:DesignTimeData x:Key="TestData"/>
+    
+    <HierarchicalDataTemplate DataType="{x:Type utils:ShapeTreeNode}" 
+                              ItemsSource="{Binding Children}">
+      
+      <TextBlock Text="{Binding Label}" ToolTip="{Binding Id}"/>
+      
+    </HierarchicalDataTemplate>
+    <Style TargetType="Image">
+      <Setter Property="Stretch" Value="None"/>
+    </Style>
+    <Style TargetType="Button" >
+      <Setter Property="Margin" Value="4"/>
+    </Style>
+  </Window.Resources>
+  
+  <Window.TaskbarItemInfo>
+    <TaskbarItemInfo x:Name="myTaskbarInfo" />
+  </Window.TaskbarItemInfo>
+
+
+  <Grid Background="Gray"
+        d:DataContext="{Binding Source={StaticResource TestData}}">
+
+    <movc:OCCWpf_Viewer x:Name="myOcctView" 
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                            Stretch="Fill" />
+    <DockPanel LastChildFill="False">
+
+      <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        <Button Click="OnImport_Click" ToolTip="Open CAD file" >
+          <Image Source="res/actionOpen256.png"/>
+        </Button>
+        <Button Click="OnExport_Click" ToolTip="Save into CAD file" >
+          <Image Source="res/actionSave256.png"/>
+        </Button>
+        <Button Click="OnFitAll_Click" ToolTip="Fit entire scene into the window">
+          <Image Source="res/actionFitAll256.png"/>
+        </Button>
+        <Button Click="OnAbout_Click" ToolTip="Show information about this application">
+          <Image Source="res/actionInfo256.png"/>
+        </Button>
+      </StackPanel>
+
+      <DockPanel DockPanel.Dock="Left" Background="{x:Null}" LastChildFill="False" >
+
+        <TreeView ItemsSource="{Binding RootShapes}" 
+                    SelectedItemChanged="ShapeTree_OnSelection"
+                    Background="Transparent" DockPanel.Dock="Top"
+                    BorderBrush="Transparent" FlowDirection="RightToLeft">
+
+          <TreeView.ItemContainerStyle>
+            <Style TargetType="{x:Type TreeViewItem}">
+              <Setter Property="FlowDirection" Value="LeftToRight"/>
+              <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+              <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+              <Setter Property="FontWeight" Value="Normal" />
+              <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                  <Setter Property="FontWeight" Value="Bold" />
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </TreeView.ItemContainerStyle>
+        </TreeView>
+      </DockPanel>
+    </DockPanel>
+
+    <Canvas>
+      <!-- Used for design time prototyping of tooltip
+      <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="3"
+              Canvas.Left="50" Canvas.Top="50" >
+        <TextBlock Background="DarkGray" Foreground="Gold"  Padding="3"
+                 TextAlignment="Center" 
+                 Text="Here we are" />
+      </Border>
+      -->
+      
+      
+      <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="3"
+              Canvas.Left="{Binding FlyByShapeData.Location.X}"
+              Canvas.Top="{Binding FlyByShapeData.Location.Y}"
+              Visibility="{Binding FlyByShapeData, Converter={StaticResource ObjToVisibilityConverter}}"
+                 >
+        <TextBlock Background="DarkGray" Foreground="Gold" Padding="3"
+                 TextAlignment="Center" 
+                 Text="{Binding FlyByShapeData.Text}" />
+      </Border>
+    </Canvas>
+  </Grid>
+
+</Window>

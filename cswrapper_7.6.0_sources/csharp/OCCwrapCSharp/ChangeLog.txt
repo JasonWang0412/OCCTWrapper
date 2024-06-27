@@ -1,0 +1,45 @@
+// Created: 2017-09-20
+//
+// Copyright (c) 2017-2021 OPEN CASCADE SAS
+//
+// This file is part of commercial software by OPEN CASCADE SAS.
+//
+// This software is furnished in accordance with the terms and conditions
+// of the contract and with the inclusion of this copyright notice.
+// This software or any other copy thereof may not be provided or otherwise
+// be made available to any third party.
+//
+// No ownership title to the software is transferred hereby.
+//
+// OPEN CASCADE SAS makes no representation or warranties with respect to the
+// performance of this software, and specifically disclaims any responsibility
+// for any damages, special or consequential, connected with its use.
+
+Log of changes affecting usage of wrappers
+==========================================
+
+Version 7.3.1
+-------------
+
+1. NCollection classes now implement IEnumerable interface,
+   so that collections can be used within foreach() loop.
+
+Version 7.2.0
+-------------
+
+1. Methods ToCString() of string classes in TCollection package are wrapped
+   using C# standard name ToString() which will now return content of the
+   string instead of class type name.
+
+2. Class OpenGl.OpenGl_ViewConrol previously included in OCCCSharp assembly
+   has been moved to new assembly OCCWinForms and now is named
+   OCCWinForms.OCCWinForms_ViewControl.
+
+3. Class D3DHost.D3DHost_ImageView previously included in OCCCSharp assembly
+   has been moved to new assembly OCCWpf and now is named
+   OCCWpf.OCCWpf_ImageView.
+
+4. Class OCCViewer has been moved from ImportExport to OCCWinForms assembly, 
+   becoming OCCWinForms.OCCWinForms_Viewer, and completely refactored.
+   Enum CurrentAction3d has been moved moved from ImportExport (namespace IE)
+   to OCCWinForms namespace.

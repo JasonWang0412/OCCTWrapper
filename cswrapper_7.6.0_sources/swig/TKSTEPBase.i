@@ -1,0 +1,198 @@
+// Created: 2006-06-22
+//
+// Copyright (c) 2006-2021 OPEN CASCADE SAS
+//
+// This file is part of commercial software by OPEN CASCADE SAS.
+//
+// This software is furnished in accordance with the terms and conditions
+// of the contract and with the inclusion of this copyright notice.
+// This software or any other copy thereof may not be provided or otherwise
+// be made available to any third party.
+//
+// No ownership title to the software is transferred hereby.
+//
+// OPEN CASCADE SAS makes no representation or warranties with respect to the
+// performance of this software, and specifically disclaims any responsibility
+// for any damages, special or consequential, connected with its use.
+
+// Definitions for wrapping Open CASCADE classes from TKSTEP toolkit to CSharp using SWIG.
+// This file is to be %included into SWIG interface definition files that wrap OCC classes
+// after %include occtypes.i
+
+// Define list of necessary libraries to link with
+%{
+#ifdef _MSC_VER
+#pragma comment(lib, "TKSTEPBase.lib")
+#endif
+%}
+
+//package StepRepr
+WRAP_AS_HANDLE_INCLUDE(StepRepr_RepresentationItem)
+WRAP_AS_NCOLLECTION_INCLUDE(StepRepr_Array1OfRepresentationItem,NCollection_Array1,Handle(StepRepr_RepresentationItem))
+
+WRAP_AS_HANDLE_INCLUDE(StepRepr_HArray1OfRepresentationItem)
+WRAP_AS_HANDLE_INCLUDE(StepRepr_RepresentationContext)
+WRAP_AS_HANDLE_INCLUDE(StepRepr_Representation)
+
+WRAP_AS_HANDLE_INCLUDE(StepRepr_RepresentationMap)
+WRAP_AS_HANDLE_INCLUDE(StepRepr_MappedItem)
+WRAP_AS_HANDLE_INCLUDE(StepRepr_DefinitionalRepresentation)
+
+WRAP_AS_HANDLE_INCLUDE(StepRepr_ShapeAspect)
+
+//package StepBasic
+WRAP_AS_HANDLE_INCLUDE(StepBasic_ExternallyDefinedItem)
+
+//package StepData
+WRAP_AS_ENUM_INCLUDE(StepData_Logical)
+//%ignore StepData_SelectMember::ParamType;
+WRAP_AS_HANDLE_INCLUDE(StepData_SelectMember)
+%ignore StepData_SelectType::Description;
+WRAP_AS_CLASS_INCLUDE(StepData_SelectType)
+//WRAP_AS_HANDLE_INCLUDE(StepData_EDescr)
+WRAP_AS_HANDLE_INCLUDE(StepData_SelectInt)
+
+//package StepGeom
+WRAP_AS_ENUM_INCLUDE(StepGeom_BSplineCurveForm)
+WRAP_AS_ENUM_INCLUDE(StepGeom_BSplineSurfaceForm)
+WRAP_AS_ENUM_INCLUDE(StepGeom_TrimmingPreference)
+WRAP_AS_ENUM_INCLUDE(StepGeom_PreferredSurfaceCurveRepresentation)
+WRAP_AS_ENUM_INCLUDE(StepGeom_TransitionCode)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_GeometricRepresentationItem)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Point)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CartesianPoint)
+WRAP_AS_NCOLLECTION_INCLUDE(StepGeom_Array1OfCartesianPoint,NCollection_Array1,Handle(StepGeom_CartesianPoint))
+WRAP_AS_HANDLE_INCLUDE(StepGeom_HArray1OfCartesianPoint)
+WRAP_AS_NCOLLECTION_INCLUDE(StepGeom_Array2OfCartesianPoint,NCollection_Array2,Handle(StepGeom_CartesianPoint))
+WRAP_AS_HANDLE_INCLUDE(StepGeom_HArray2OfCartesianPoint)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Direction)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Vector)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CartesianTransformationOperator)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CartesianTransformationOperator2d)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CartesianTransformationOperator3d)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Placement)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Axis1Placement)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Axis2Placement2d)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Axis2Placement3d)
+WRAP_AS_CLASS_INCLUDE(StepGeom_Axis2Placement)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_SuParameters)
+
+WRAP_AS_CLASS_INCLUDE(StepGeom_TrimmingSelect)
+
+WRAP_AS_NCOLLECTION_INCLUDE(StepGeom_Array1OfTrimmingSelect,NCollection_Array1,StepGeom_TrimmingSelect)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_HArray1OfTrimmingSelect)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Curve)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_BoundedCurve)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_BSplineCurve)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Conic)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Circle)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Ellipse)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Hyperbola)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Parabola)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Line)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Polyline)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_TrimmedCurve)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CompositeCurveSegment)
+WRAP_AS_NCOLLECTION_INCLUDE(StepGeom_Array1OfCompositeCurveSegment,NCollection_Array1,Handle(StepGeom_CompositeCurveSegment))
+WRAP_AS_HANDLE_INCLUDE(StepGeom_HArray1OfCompositeCurveSegment)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CompositeCurve)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Surface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_BoundedSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_BSplineSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_ElementarySurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_ConicalSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CylindricalSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Plane)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_SphericalSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_ToroidalSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_SweptSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_SurfaceOfLinearExtrusion)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_SurfaceOfRevolution)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_RectangularTrimmedSurface)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_Pcurve)
+WRAP_AS_CLASS_INCLUDE(StepGeom_PcurveOrSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_DegeneratePcurve)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CompositeCurveOnSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_BoundaryCurve)
+WRAP_AS_CLASS_INCLUDE(StepGeom_SurfaceBoundary)
+WRAP_AS_NCOLLECTION_INCLUDE(StepGeom_Array1OfSurfaceBoundary,NCollection_Array1,StepGeom_SurfaceBoundary)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_HArray1OfSurfaceBoundary)
+
+WRAP_AS_HANDLE_INCLUDE(StepGeom_CurveBoundedSurface)
+
+WRAP_AS_NCOLLECTION_INCLUDE(StepGeom_Array1OfPcurveOrSurface,NCollection_Array1,StepGeom_PcurveOrSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_HArray1OfPcurveOrSurface)
+WRAP_AS_HANDLE_INCLUDE(StepGeom_SurfaceCurve)
+
+//package StepShape
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_TopologicalRepresentationItem)
+WRAP_AS_HANDLE_INCLUDE(StepShape_Vertex)
+WRAP_AS_HANDLE_INCLUDE(StepShape_Edge)
+WRAP_AS_HANDLE_INCLUDE(StepShape_OrientedEdge)
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfOrientedEdge,NCollection_Array1,Handle(StepShape_OrientedEdge))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfOrientedEdge)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_EdgeCurve)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_Loop)
+WRAP_AS_HANDLE_INCLUDE(StepShape_EdgeLoop)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_FaceBound)
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfFaceBound,NCollection_Array1,Handle(StepShape_FaceBound))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfFaceBound)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_Face)
+WRAP_AS_HANDLE_INCLUDE(StepShape_FaceSurface)
+
+WRAP_AS_CLASS_INCLUDE(StepShape_GeometricSetSelect)
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfGeometricSetSelect,NCollection_Array1,StepShape_GeometricSetSelect)
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfGeometricSetSelect)
+
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_GeometricSet)
+WRAP_AS_HANDLE_INCLUDE(StepShape_PolyLoop)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_VertexLoop)
+
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfFace,NCollection_Array1,Handle(StepShape_Face))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfFace)
+WRAP_AS_HANDLE_INCLUDE(StepShape_ConnectedFaceSet)
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfConnectedFaceSet,NCollection_Array1,Handle(StepShape_ConnectedFaceSet))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfConnectedFaceSet)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_ClosedShell)
+WRAP_AS_HANDLE_INCLUDE(StepShape_OrientedClosedShell)
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfOrientedClosedShell,NCollection_Array1,Handle(StepShape_OrientedClosedShell))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfOrientedClosedShell)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_OpenShell)
+WRAP_AS_HANDLE_INCLUDE(StepShape_OrientedOpenShell)
+WRAP_AS_CLASS_INCLUDE(StepShape_Shell)
+
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfEdge,NCollection_Array1,Handle(StepShape_Edge))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfEdge)
+WRAP_AS_HANDLE_INCLUDE(StepShape_ConnectedEdgeSet)
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfConnectedEdgeSet,NCollection_Array1,Handle(StepShape_ConnectedEdgeSet))
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfConnectedEdgeSet)
+
+WRAP_AS_NCOLLECTION_INCLUDE(StepShape_Array1OfShell,NCollection_Array1,StepShape_Shell)
+WRAP_AS_HANDLE_INCLUDE(StepShape_HArray1OfShell)
+
+WRAP_AS_HANDLE_INCLUDE(StepShape_SolidModel)
+WRAP_AS_HANDLE_INCLUDE(StepShape_ManifoldSolidBrep)
+WRAP_AS_HANDLE_INCLUDE(StepShape_BrepWithVoids)
+WRAP_AS_HANDLE_INCLUDE(StepShape_FacetedBrep)
+WRAP_AS_HANDLE_INCLUDE(StepShape_FacetedBrepAndBrepWithVoids)
+WRAP_AS_HANDLE_INCLUDE(StepShape_EdgeBasedWireframeModel)
+WRAP_AS_HANDLE_INCLUDE(StepShape_FaceBasedSurfaceModel)
+WRAP_AS_HANDLE_INCLUDE(StepShape_ShellBasedSurfaceModel)

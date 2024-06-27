@@ -1,0 +1,40 @@
+@echo off
+
+:: Created: 2019-06-05
+
+:: Copyright (c) 2019-2021 OPEN CASCADE SAS
+
+:: This file is part of commercial software by OPEN CASCADE SAS.
+
+:: This software is furnished in accordance with the terms and conditions
+:: of the contract and with the inclusion of this copyright notice.
+:: This software or any other copy thereof may not be provided or otherwise
+:: be made available to any third party.
+
+:: No ownership title to the software is transferred hereby.
+
+:: OPEN CASCADE SAS makes no representation or warranties with respect to the
+:: performance of this software, and specifically disclaims any responsibility
+:: for any damages, special or consequential, connected with its use.
+
+:: Auxiliary: list types not recognized by SWIG, and places where they are used
+
+call "%~dp0env.bat"
+
+cd "%~dp0Wrappers"
+for %%a in (SWIGTYPE_p_*.cs) do (
+
+  echo %%a | sed s@'\.cs'@@ | sed s@'SWIGTYPE_p_'@'Not wrapped type: '@
+
+  :: Do not report known cases: Standard_*Stream
+  if not %%a == SWIGTYPE_p_Standard_OStream.cs (
+    if not %%a == SWIGTYPE_p_Standard_IStream.cs (
+
+      echo Used in:
+      grep -l %%~na * | grep -v %%a
+      echo.
+    )
+  )
+)
+
+cd "%~dp0"

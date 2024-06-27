@@ -1,0 +1,30 @@
+@ECHO OFF
+
+:: Created: 2019-06-05
+
+:: Copyright (c) 2019-2021 OPEN CASCADE SAS
+
+:: This file is part of commercial software by OPEN CASCADE SAS.
+
+:: This software is furnished in accordance with the terms and conditions
+:: of the contract and with the inclusion of this copyright notice.
+:: This software or any other copy thereof may not be provided or otherwise
+:: be made available to any third party.
+
+:: No ownership title to the software is transferred hereby.
+
+:: OPEN CASCADE SAS makes no representation or warranties with respect to the
+:: performance of this software, and specifically disclaims any responsibility
+:: for any damages, special or consequential, connected with its use.
+
+:: Tune the local environment settings if necessary
+:: CASROOT - path to OCCT installation
+:: PRODROOT - path to OCCT products installation
+:: OCCLICENSE_FILE - path to OCCT products license file
+:: BUILD_TYPE - either Release (default), Debug, or Protected (by license)
+
+set "CASROOT=@OpenCASCADE_DIR@"
+set "PRODROOT=@PRODUCTS_DIR@"
+set "OCCLICENSE_FILE=@OCCLICENSE_FILE@"
+
+
