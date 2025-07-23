@@ -101,3 +101,5 @@ WRAP_AS_ENUM_INCLUDE(Extrema_ExtAlgo)
 %ignore ProjLib::MakePCurveOfType; // uses non-wrapped type
 WRAP_AS_PACKAGE(ProjLib)
 
+// GeomLib classes
+WRAP_AS_CLASS_INCLUDE(GeomLib_IsPlanarSurface)
