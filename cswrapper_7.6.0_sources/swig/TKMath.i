@@ -212,3 +212,6 @@ WRAP_AS_PACKAGE(ElSLib)
 
 // gp package
 WRAP_AS_PACKAGE(gp)
+
+// Bnd_OBB classes
+WRAP_AS_CLASS_INCLUDE(Bnd_OBB)
