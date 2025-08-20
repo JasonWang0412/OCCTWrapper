@@ -103,3 +103,15 @@ WRAP_AS_PACKAGE(ProjLib)
 
 // GeomLib classes
 WRAP_AS_CLASS_INCLUDE(GeomLib_IsPlanarSurface)
+
+// GCPnts
+WRAP_AS_CLASS_INCLUDE(GCPnts_AbscissaPoint)
+WRAP_AS_CLASS_INCLUDE(GCPnts_QuasiUniformAbscissa)
+WRAP_AS_CLASS_INCLUDE(GCPnts_QuasiUniformDeflection)
+WRAP_AS_CLASS_INCLUDE(GCPnts_TangentialDeflection)
+WRAP_AS_CLASS_INCLUDE(GCPnts_UniformAbscissa)
+WRAP_AS_CLASS_INCLUDE(GCPnts_UniformDeflection)
+
+// type enums
+WRAP_AS_ENUM_INCLUDE(GCPnts_AbscissaType)
+WRAP_AS_ENUM_INCLUDE(GCPnts_DeflectionType)
