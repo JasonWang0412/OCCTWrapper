@@ -29,3 +29,4 @@
 WRAP_AS_CLASS_INCLUDE(StlAPI_Reader)
 %attributeref(StlAPI_Writer, bool, ASCIIMode);
 WRAP_AS_CLASS_INCLUDE(StlAPI_Writer)
+WRAP_AS_CLASS_INCLUDE(RWStl)
